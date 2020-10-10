@@ -1,0 +1,17 @@
+---
+- name: Install MariaDB Server
+  yum:
+    name: 
+      - mariadb-server
+      - MySQL-python
+    state: latest
+
+- name: Start MariaDB
+  service:
+    name: mariadb
+    state: started
+
+- name: Enable MariaDB
+  service:
+    name: mariadb
+    enabled: yes

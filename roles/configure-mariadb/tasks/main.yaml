@@ -1,0 +1,29 @@
+---
+- name: Delete database with name 'ecomdb'
+  community.mysql.mysql_db:
+    name: ecomdb
+    state: absent
+
+- name: Create a new MariaDB database with name ecomdb
+  community.mysql.mysql_db:
+    name: ecomdb
+    state: present
+
+- name: Add user to database ecomdb with all privileges
+  community.mysql.mysql_user:
+    name: ecomuser
+    password: ecompassword
+    host: localhost
+    priv: '*.*:ALL'
+    state: present
+    
+- name: Copy database dump file
+  copy:
+    src: db-load-script.sql
+    dest: /tmp
+
+- name: Load sql data into database
+  community.mysql.mysql_db:
+    name: ecomdb
+    state: import
+    target: /tmp/db-load-script.sql

@@ -1,0 +1,41 @@
+- name: Install httpd
+  yum:
+    name: 
+      - httpd
+      - php
+      - php-mysql
+    state: latest
+
+- name: Firewalld configuration
+  include_role:
+    name: firewalld
+
+- name: Configure httpd
+  command: sed -i 's/index.html/index.php/g' /etc/httpd/conf/httpd.conf
+
+- name: Start httpd
+  service:
+    name: httpd
+    state: started
+
+- name: Enable httpd
+  service:
+    name: httpd
+    enabled: yes
+
+- name: Install git
+  yum:
+    name: git
+    state: latest
+
+- name: remove repo
+  command: rm -rf /var/www/html/learning-app-ecommerce
+  
+- name: Clone git repo for php app
+  git:
+    repo: https://github.com/kodekloudhub/learning-app-ecommerce.git
+    dest: /var/www/html/learning-app-ecommerce
+
+- name: Update index.php
+  shell: >
+    sed -i 's/172.20.1.101/localhost/g' /var/www/html/learning-app-ecommerce/index.php
